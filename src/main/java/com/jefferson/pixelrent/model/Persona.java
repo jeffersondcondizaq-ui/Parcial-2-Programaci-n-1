@@ -10,6 +10,7 @@ public abstract class Persona {
         this.nombreCompleto = nombreCompleto;
     }
 
+    // Getters y Setters
     public String getIdentificacion() {
         return identificacion;
     }
@@ -17,4 +18,10 @@ public abstract class Persona {
     public String getNombreCompleto() {
         return nombreCompleto;
     }
+
+    public void setNombreCompleto(String nombreCompleto) {
+        this.nombreCompleto = nombreCompleto;
+    }
+
+
 }

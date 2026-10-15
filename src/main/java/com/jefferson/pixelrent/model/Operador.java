@@ -11,6 +11,7 @@ public class Operador extends Persona {
         this.aniosExperiencia = aniosExperiencia;
     }
 
+    // Getters y Setters
     public String getCertificacion() {
         return certificacion;
     }

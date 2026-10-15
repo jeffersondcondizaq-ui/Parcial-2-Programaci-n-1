@@ -26,6 +26,60 @@ public class Empresa {
         this.reservas = new ArrayList<>();
     }
 
+    // Getters y Setters
+    public String getNit() {
+        return nit;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
+
+    public ArrayList<Sede> getSedes() {
+        return sedes;
+    }
+
+    public void setSedes(ArrayList<Sede> sedes) {
+        this.sedes = sedes;
+    }
+
+    public ArrayList<Cliente> getClientes() {
+        return clientes;
+    }
+
+    public void setClientes(ArrayList<Cliente> clientes) {
+        this.clientes = clientes;
+    }
+
+    public ArrayList<Operador> getOperadores() {
+        return operadores;
+    }
+
+    public void setOperadores(ArrayList<Operador> operadores) {
+        this.operadores = operadores;
+    }
+
+    public ArrayList<Reserva> getReservas() {
+        return reservas;
+    }
+
+    public void setReservas(ArrayList<Reserva> reservas) {
+        this.reservas = reservas;
+    }
+
+    // Metodos
     public boolean registrarSede(Sede sede) {
         throw new UnsupportedOperationException();
     }

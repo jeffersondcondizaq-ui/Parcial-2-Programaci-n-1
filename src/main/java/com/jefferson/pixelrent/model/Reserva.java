@@ -24,6 +24,28 @@ public class Reserva {
         this.detalles = new ArrayList<>();
     }
 
+    // Getters
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public LocalDate getFecha() {
+        return fecha;
+    }
+
+    public Turno getTurno() {
+        return turno;
+    }
+
+    public EstadoReserva getEstado() {
+        return estado;
+    }
+
+    // Metodos
     public boolean agregarEquipo(Equipo equipo, int horas) {
         throw new UnsupportedOperationException();
     }
@@ -52,23 +74,5 @@ public class Reserva {
         throw new UnsupportedOperationException();
     }
 
-    public String getCodigo() {
-        return codigo;
-    }
 
-    public Cliente getCliente() {
-        return cliente;
-    }
-
-    public LocalDate getFecha() {
-        return fecha;
-    }
-
-    public Turno getTurno() {
-        return turno;
-    }
-
-    public EstadoReserva getEstado() {
-        return estado;
-    }
 }

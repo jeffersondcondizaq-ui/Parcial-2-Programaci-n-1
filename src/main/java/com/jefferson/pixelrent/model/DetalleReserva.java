@@ -10,15 +10,25 @@ public class DetalleReserva {
         this.horas = horas;
     }
 
-    public double calcularSubtotal() {
-        throw new UnsupportedOperationException();
-    }
-
+    // Getters y Setters
     public Equipo getEquipo() {
         return equipo;
     }
 
+    public void setEquipo(Equipo equipo) {
+        this.equipo = equipo;
+    }
+
     public int getHoras() {
         return horas;
+    }
+
+    public void setHoras(int horas) {
+        this.horas = horas;
+    }
+
+    // Metodos
+    public double calcularSubtotal() {
+        throw new UnsupportedOperationException();
     }
 }

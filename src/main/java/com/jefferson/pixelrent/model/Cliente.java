@@ -11,6 +11,7 @@ public class Cliente extends Persona {
         this.correo = correo;
     }
 
+    // Getters
     public String getTelefono() {
         return telefono;
     }
@@ -18,4 +19,6 @@ public class Cliente extends Persona {
     public String getCorreo() {
         return correo;
     }
+
+    // Metodos
 }

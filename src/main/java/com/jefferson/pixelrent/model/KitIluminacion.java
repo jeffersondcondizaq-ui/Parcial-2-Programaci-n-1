@@ -14,6 +14,24 @@ public class KitIluminacion extends Equipo {
         this.controlInalambrico = controlInalambrico;
     }
 
+    // Getters y Setters
+    public int getCantidadLuces() {
+        return cantidadLuces;
+    }
+
+    public void setCantidadLuces(int cantidadLuces) {
+        this.cantidadLuces = cantidadLuces;
+    }
+
+    public boolean getControlInalambrico() {
+        return controlInalambrico;
+    }
+
+    public void setControlInalambrico(boolean controlInalambrico) {
+        this.controlInalambrico = controlInalambrico;
+    }
+
+    // Metodos
     @Override
     public double calcularCosto(int horas) {
         throw new UnsupportedOperationException();

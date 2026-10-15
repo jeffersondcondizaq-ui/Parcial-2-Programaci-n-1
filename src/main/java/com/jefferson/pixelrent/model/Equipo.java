@@ -15,22 +15,9 @@ public abstract class Equipo {
         this.modelo = modelo;
     }
 
-    public abstract double calcularCosto(int horas);
-
-    public boolean estaDisponible() {
-        throw new UnsupportedOperationException();
-    }
-
-    public boolean requiereOperador() {
-        throw new UnsupportedOperationException();
-    }
-
+    // Getters y Setters
     public String getCodigo() {
         return codigo;
-    }
-
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
     }
 
     public String getMarca() {
@@ -56,4 +43,17 @@ public abstract class Equipo {
     public void setDisponibilidad(Disponibilidad disponibilidad) {
         this.disponibilidad = disponibilidad;
     }
+
+    // Metodos
+    public abstract double calcularCosto(int horas);
+
+    public boolean estaDisponible() {
+        throw new UnsupportedOperationException();
+    }
+
+    public boolean requiereOperador() {
+        throw new UnsupportedOperationException();
+    }
+
+
 }

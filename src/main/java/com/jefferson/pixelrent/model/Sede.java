@@ -16,18 +16,7 @@ public class Sede {
         this.equipos = new ArrayList<>();
     }
 
-    public boolean agregarEquipo(Equipo equipo) {
-        throw new UnsupportedOperationException();
-    }
-
-    public Equipo buscarEquipo(String codigo) {
-        throw new UnsupportedOperationException();
-    }
-
-    public boolean eliminarEquipo(String codigo) {
-        throw new UnsupportedOperationException();
-    }
-
+    // Getters y Setters
     public String getCodigo() {
         return codigo;
     }
@@ -51,4 +40,18 @@ public class Sede {
     public ArrayList<Equipo> getEquipos() {
         return equipos;
     }
+
+    // Metodos
+    public boolean agregarEquipo(Equipo equipo) {
+        throw new UnsupportedOperationException();
+    }
+
+    public Equipo buscarEquipo(String codigo) {
+        throw new UnsupportedOperationException();
+    }
+
+    public boolean eliminarEquipo(String codigo) {
+        throw new UnsupportedOperationException();
+    }
+
 }

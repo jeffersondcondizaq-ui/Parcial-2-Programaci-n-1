@@ -14,6 +14,24 @@ public class Camara extends Equipo {
         this.estabilizador = estabilizador;
     }
 
+    // Getters y Setters
+    public String getResolucionMaxima() {
+        return resolucionMaxima;
+    }
+
+    public void setResolucionMaxima(String resolucionMaxima) {
+        this.resolucionMaxima = resolucionMaxima;
+    }
+
+    public boolean getEstabilizador() {
+        return estabilizador;
+    }
+
+    public void setEstabilizador(boolean estabilizador) {
+        this.estabilizador = estabilizador;
+    }
+
+    // Metodos
     @Override
     public double calcularCosto(int horas) {
         throw new UnsupportedOperationException();

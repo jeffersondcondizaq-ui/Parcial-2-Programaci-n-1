@@ -14,6 +14,24 @@ public class Dron extends Equipo {
         this.bateriaAdicional = bateriaAdicional;
     }
 
+    // Getters y Setters
+    public int getAutonomiaMinutos() {
+        return autonomiaMinutos;
+    }
+
+    public void setAutonomiaMinutos(int autonomiaMinutos) {
+        this.autonomiaMinutos = autonomiaMinutos;
+    }
+
+    public boolean getBateriaAdicional() {
+        return bateriaAdicional;
+    }
+
+    public void setBateriaAdicional(boolean bateriaAdicional) {
+        this.bateriaAdicional = bateriaAdicional;
+    }
+
+    // Metodos
     @Override
     public double calcularCosto(int horas) {
         throw new UnsupportedOperationException();
