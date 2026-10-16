@@ -1,5 +1,6 @@
 package com.jefferson.notifications;
 
+import com.jefferson.pixelrent.enums.Disponibilidad;
 import com.jefferson.pixelrent.enums.EstadoReserva;
 import com.jefferson.pixelrent.enums.Turno;
 import com.jefferson.pixelrent.model.*;
@@ -248,6 +249,7 @@ public class Main {
                     "\n 1. Gestionar Camaras" +
                     "\n 2. Gestionar Drones" +
                     "\n 3. Gestionar Kits Iluminacion" +
+                    "\n 4. Cambiar Disponibilidad de Equipo" +
                     "\n 0. Regresar");
             switch (equOption) {
                 case 1:
@@ -259,12 +261,44 @@ public class Main {
                 case 3:
                     gestionarKitIluminacion(empresa);
                     break;
+                case 4:
+                    cambiarDisponibilidadEquipo(empresa);
+                    break;
                 case 0:
                     break;
                 default:
                     info("Opción no válida.");
             }
         } while (equOption != 0);
+    }
+
+    private static void cambiarDisponibilidadEquipo(Empresa empresa) {
+        String codigo = pedirTexto("Código del equipo:");
+        if (codigo == null) {
+            return;
+        }
+        Equipo equipo = empresa.buscarEquipo(codigo.trim());
+        if (equipo == null) {
+            info("No se encontró el equipo.");
+            return;
+        }
+        Integer opcion = pedirEntero("Disponibilidad actual: " + equipo.getDisponibilidad() +
+                "\nSeleccione la nueva disponibilidad:\n 1. Disponible\n 2. En mantenimiento\n 3. Fuera de servicio");
+        if (opcion == null) {
+            return;
+        }
+        Disponibilidad nueva = switch (opcion) {
+            case 1 -> Disponibilidad.DISPONIBLE;
+            case 2 -> Disponibilidad.EN_MANTENIMIENTO;
+            case 3 -> Disponibilidad.FUERA_DE_SERVICIO;
+            default -> null;
+        };
+        if (nueva == null) {
+            info("Opción no válida.");
+            return;
+        }
+        equipo.setDisponibilidad(nueva);
+        info("Disponibilidad actualizada a " + nueva + ".");
     }
 
     private static void mostrarEquipos(Empresa empresa, Class<? extends Equipo> tipo, String etiqueta) {
@@ -800,25 +834,37 @@ public class Main {
             resOption = leerOpcion("~~ GESTIONAR RESERVAS ~~\n" +
                     "Seleccione una opcion\n" +
                     "\n 1. Crear Reserva" +
-                    "\n 2. Mostrar Reservas" +
-                    "\n 3. Mostrar Reserva por Codigo" +
-                    "\n 4. Confirmar Reserva" +
-                    "\n 5. Cancelar Reserva" +
+                    "\n 2. Agregar Equipo a Reserva" +
+                    "\n 3. Asignar Operador a Reserva" +
+                    "\n 4. Mostrar Reservas" +
+                    "\n 5. Mostrar Reserva por Codigo" +
+                    "\n 6. Consultar Valor Total de Reserva" +
+                    "\n 7. Confirmar Reserva" +
+                    "\n 8. Cancelar Reserva" +
                     "\n 0. Regresar");
             switch (resOption) {
                 case 1:
                     crearReserva(empresa);
                     break;
                 case 2:
-                    mostrarReservas(empresa);
+                    agregarEquipoAReservaMenu(empresa);
                     break;
                 case 3:
-                    mostrarReservaPorCodigo(empresa);
+                    asignarOperadorAReservaMenu(empresa);
                     break;
                 case 4:
-                    confirmarReserva(empresa);
+                    mostrarReservas(empresa);
                     break;
                 case 5:
+                    mostrarReservaPorCodigo(empresa);
+                    break;
+                case 6:
+                    consultarValorTotalReserva(empresa);
+                    break;
+                case 7:
+                    confirmarReserva(empresa);
+                    break;
+                case 8:
                     cancelarReserva(empresa);
                     break;
                 case 0:
@@ -864,8 +910,16 @@ public class Main {
             info("No se pudo registrar la reserva.");
             return;
         }
-        info("Reserva creada con éxito. Ahora agregue los equipos.");
+        info("Reserva creada con éxito (estado inicial: SOLICITADA). Ahora agregue los equipos.");
 
+        agregarEquiposLoop(empresa, codigo.trim());
+
+        if (reserva.contieneDron() && pedirBooleano("La reserva incluye un dron. ¿Desea asignar un operador ahora?")) {
+            asignarOperadorReserva(empresa, codigo.trim());
+        }
+    }
+
+    private static void agregarEquiposLoop(Empresa empresa, String codigoReserva) {
         boolean agregarMas = true;
         while (agregarMas) {
             String codEquipo = pedirTexto("Código del equipo a agregar (cancelar para terminar):");
@@ -876,19 +930,71 @@ public class Main {
             if (horas == null) {
                 info("No se agregó el equipo.");
             } else {
-                boolean ok = empresa.agregarEquipoAReserva(codigo.trim(), codEquipo.trim(), horas);
-                info(ok ? "Equipo agregado a la reserva." : "No se pudo agregar el equipo (verifique disponibilidad).");
+                boolean ok = empresa.agregarEquipoAReserva(codigoReserva, codEquipo.trim(), horas);
+                info(ok ? "Equipo agregado a la reserva."
+                        : "No se pudo agregar el equipo (verifique que exista, esté disponible, "
+                        + "no esté ya incluido en la reserva y no esté ocupado en esa fecha/turno).");
             }
             agregarMas = pedirBooleano("¿Desea agregar otro equipo?");
         }
+    }
 
-        if (reserva.contieneDron() && pedirBooleano("La reserva incluye un dron. ¿Desea asignar un operador ahora?")) {
-            String idOperador = pedirTexto("Identificación del operador:");
-            if (idOperador != null) {
-                boolean ok = empresa.asignarOperadorAReserva(codigo.trim(), idOperador.trim());
-                info(ok ? "Operador asignado con éxito." : "No se pudo asignar el operador.");
-            }
+    private static void agregarEquipoAReservaMenu(Empresa empresa) {
+        String codigo = pedirTexto("Código de la reserva:");
+        if (codigo == null) {
+            return;
         }
+        Reserva reserva = empresa.buscarReserva(codigo.trim());
+        if (reserva == null) {
+            info("No se encontró la reserva.");
+            return;
+        }
+        if (reserva.getEstado() != EstadoReserva.SOLICITADA) {
+            info("Solo se pueden agregar equipos a reservas en estado SOLICITADA.");
+            return;
+        }
+        agregarEquiposLoop(empresa, codigo.trim());
+    }
+
+    private static void asignarOperadorReserva(Empresa empresa, String codigoReserva) {
+        Reserva reserva = empresa.buscarReserva(codigoReserva);
+        if (reserva != null && reserva.getOperador() != null) {
+            info("Esta reserva ya tiene un operador asignado (" + reserva.getOperador().getNombreCompleto()
+                    + "). Solo puede existir un operador por reserva.");
+            return;
+        }
+        String idOperador = pedirTexto("Identificación del operador:");
+        if (idOperador == null) {
+            return;
+        }
+        boolean ok = empresa.asignarOperadorAReserva(codigoReserva, idOperador.trim());
+        info(ok ? "Operador asignado con éxito."
+                : "No se pudo asignar el operador (verifique que exista y que la reserva esté en estado SOLICITADA).");
+    }
+
+    private static void asignarOperadorAReservaMenu(Empresa empresa) {
+        String codigo = pedirTexto("Código de la reserva:");
+        if (codigo == null) {
+            return;
+        }
+        if (empresa.buscarReserva(codigo.trim()) == null) {
+            info("No se encontró la reserva.");
+            return;
+        }
+        asignarOperadorReserva(empresa, codigo.trim());
+    }
+
+    private static void consultarValorTotalReserva(Empresa empresa) {
+        String codigo = pedirTexto("Código de la reserva:");
+        if (codigo == null) {
+            return;
+        }
+        if (empresa.buscarReserva(codigo.trim()) == null) {
+            info("No se encontró la reserva.");
+            return;
+        }
+        double valor = empresa.consultarValorReserva(codigo.trim());
+        info("Valor total de la reserva " + codigo.trim() + ": " + valor);
     }
 
     private static void mostrarReservas(Empresa empresa) {
