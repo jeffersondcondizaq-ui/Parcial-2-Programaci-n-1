@@ -81,90 +81,218 @@ public class Empresa {
 
     // Metodos
     public boolean registrarSede(Sede sede) {
-        throw new UnsupportedOperationException();
+        if (sede == null || buscarSede(sede.getCodigo()) != null) {
+            return false;
+        }
+        return sedes.add(sede);
     }
 
     public Sede buscarSede(String codigo) {
-        throw new UnsupportedOperationException();
+        for (Sede sede : sedes) {
+            if (sede.getCodigo().equals(codigo)) {
+                return sede;
+            }
+        }
+        return null;
     }
 
     public boolean actualizarSede(String codigo, String nombre, String direccion) {
-        throw new UnsupportedOperationException();
+        Sede sede = buscarSede(codigo);
+        if (sede == null) {
+            return false;
+        }
+        sede.setNombre(nombre);
+        sede.setDireccion(direccion);
+        return true;
     }
 
     public boolean eliminarSede(String codigo) {
-        throw new UnsupportedOperationException();
+        Sede sede = buscarSede(codigo);
+        if (sede == null) {
+            return false;
+        }
+        return sedes.remove(sede);
     }
 
     public boolean registrarEquipo(String codigoSede, Equipo equipo) {
-        throw new UnsupportedOperationException();
+        Sede sede = buscarSede(codigoSede);
+        if (sede == null) {
+            return false;
+        }
+        return sede.agregarEquipo(equipo);
     }
 
     public Equipo buscarEquipo(String codigo) {
-        throw new UnsupportedOperationException();
+        for (Sede sede : sedes) {
+            Equipo equipo = sede.buscarEquipo(codigo);
+            if (equipo != null) {
+                return equipo;
+            }
+        }
+        return null;
+    }
+
+    public Sede buscarSedeDeEquipo(String codigo) {
+        for (Sede sede : sedes) {
+            if (sede.buscarEquipo(codigo) != null) {
+                return sede;
+            }
+        }
+        return null;
     }
 
     public boolean eliminarEquipo(String codigo) {
-        throw new UnsupportedOperationException();
+        Sede sede = buscarSedeDeEquipo(codigo);
+        if (sede == null) {
+            return false;
+        }
+        return sede.eliminarEquipo(codigo);
     }
 
     public boolean registrarCliente(Cliente cliente) {
-        throw new UnsupportedOperationException();
+        if (cliente == null || buscarCliente(cliente.getIdentificacion()) != null) {
+            return false;
+        }
+        return clientes.add(cliente);
     }
 
     public Cliente buscarCliente(String identificacion) {
-        throw new UnsupportedOperationException();
+        for (Cliente cliente : clientes) {
+            if (cliente.getIdentificacion().equals(identificacion)) {
+                return cliente;
+            }
+        }
+        return null;
+    }
+
+    public boolean eliminarCliente(String identificacion) {
+        Cliente cliente = buscarCliente(identificacion);
+        if (cliente == null) {
+            return false;
+        }
+        return clientes.remove(cliente);
     }
 
     public boolean registrarOperador(Operador operador) {
-        throw new UnsupportedOperationException();
+        if (operador == null || buscarOperador(operador.getIdentificacion()) != null) {
+            return false;
+        }
+        return operadores.add(operador);
     }
 
     public Operador buscarOperador(String identificacion) {
-        throw new UnsupportedOperationException();
+        for (Operador operador : operadores) {
+            if (operador.getIdentificacion().equals(identificacion)) {
+                return operador;
+            }
+        }
+        return null;
     }
 
     public boolean actualizarOperador(String id, String certificacion, int anios) {
-        throw new UnsupportedOperationException();
+        Operador operador = buscarOperador(id);
+        if (operador == null) {
+            return false;
+        }
+        operador.setCertificacion(certificacion);
+        operador.setAniosExperiencia(anios);
+        return true;
     }
 
     public boolean eliminarOperador(String id) {
-        throw new UnsupportedOperationException();
+        Operador operador = buscarOperador(id);
+        if (operador == null) {
+            return false;
+        }
+        return operadores.remove(operador);
     }
 
     public boolean registrarReserva(Reserva reserva) {
-        throw new UnsupportedOperationException();
+        if (reserva == null || buscarReserva(reserva.getCodigo()) != null) {
+            return false;
+        }
+        return reservas.add(reserva);
     }
 
     public Reserva buscarReserva(String codigo) {
-        throw new UnsupportedOperationException();
+        for (Reserva reserva : reservas) {
+            if (reserva.getCodigo().equals(codigo)) {
+                return reserva;
+            }
+        }
+        return null;
     }
 
     public boolean agregarEquipoAReserva(String codReserva, String codEquipo, int horas) {
-        throw new UnsupportedOperationException();
+        Reserva reserva = buscarReserva(codReserva);
+        Equipo equipo = buscarEquipo(codEquipo);
+        if (reserva == null || equipo == null) {
+            return false;
+        }
+        if (!equipo.estaDisponible() || equipoOcupado(equipo, reserva.getFecha(), reserva.getTurno())) {
+            return false;
+        }
+        return reserva.agregarEquipo(equipo, horas);
     }
 
     public boolean asignarOperadorAReserva(String codReserva, String idOperador) {
-        throw new UnsupportedOperationException();
+        Reserva reserva = buscarReserva(codReserva);
+        Operador operador = buscarOperador(idOperador);
+        if (reserva == null || operador == null) {
+            return false;
+        }
+        return reserva.asignarOperador(operador);
     }
 
     public boolean cambiarEstadoReserva(String codReserva, EstadoReserva nuevo) {
-        throw new UnsupportedOperationException();
+        Reserva reserva = buscarReserva(codReserva);
+        if (reserva == null) {
+            return false;
+        }
+        return reserva.cambiarEstado(nuevo);
     }
 
     public boolean equipoOcupado(Equipo equipo, LocalDate fecha, Turno turno) {
-        throw new UnsupportedOperationException();
+        for (Reserva reserva : reservas) {
+            if (reserva.getEstado() == EstadoReserva.CANCELADA) {
+                continue;
+            }
+            if (reserva.getFecha().equals(fecha) && reserva.getTurno() == turno
+                    && reserva.contieneEquipo(equipo.getCodigo())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public ArrayList<Equipo> consultarEquiposDisponibles(LocalDate fecha, Turno turno) {
-        throw new UnsupportedOperationException();
+        ArrayList<Equipo> disponibles = new ArrayList<>();
+        for (Sede sede : sedes) {
+            for (Equipo equipo : sede.getEquipos()) {
+                if (equipo.estaDisponible() && !equipoOcupado(equipo, fecha, turno)) {
+                    disponibles.add(equipo);
+                }
+            }
+        }
+        return disponibles;
     }
 
     public ArrayList<Reserva> consultarReservasConfirmadas(String idCliente) {
-        throw new UnsupportedOperationException();
+        ArrayList<Reserva> confirmadas = new ArrayList<>();
+        for (Reserva reserva : reservas) {
+            if (reserva.getEstado() == EstadoReserva.CONFIRMADA
+                    && reserva.getCliente().getIdentificacion().equals(idCliente)) {
+                confirmadas.add(reserva);
+            }
+        }
+        return confirmadas;
     }
 
     public double consultarValorReserva(String codReserva) {
-        throw new UnsupportedOperationException();
+        Reserva reserva = buscarReserva(codReserva);
+        if (reserva == null) {
+            return 0;
+        }
+        return reserva.calcularValorTotal();
     }
 }

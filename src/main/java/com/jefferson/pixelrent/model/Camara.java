@@ -34,6 +34,10 @@ public class Camara extends Equipo {
     // Metodos
     @Override
     public double calcularCosto(int horas) {
-        throw new UnsupportedOperationException();
+        double costo = TARIFA_HORA * horas;
+        if (estabilizador) {
+            costo += RECARGO_ESTABILIZADOR;
+        }
+        return costo;
     }
 }

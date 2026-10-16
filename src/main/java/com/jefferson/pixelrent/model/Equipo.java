@@ -13,6 +13,7 @@ public abstract class Equipo {
         this.codigo = codigo;
         this.marca = marca;
         this.modelo = modelo;
+        this.disponibilidad = Disponibilidad.DISPONIBLE;
     }
 
     // Getters y Setters
@@ -48,11 +49,11 @@ public abstract class Equipo {
     public abstract double calcularCosto(int horas);
 
     public boolean estaDisponible() {
-        throw new UnsupportedOperationException();
+        return disponibilidad == Disponibilidad.DISPONIBLE;
     }
 
     public boolean requiereOperador() {
-        throw new UnsupportedOperationException();
+        return false;
     }
 
 

@@ -43,15 +43,27 @@ public class Sede {
 
     // Metodos
     public boolean agregarEquipo(Equipo equipo) {
-        throw new UnsupportedOperationException();
+        if (equipo == null || buscarEquipo(equipo.getCodigo()) != null) {
+            return false;
+        }
+        return equipos.add(equipo);
     }
 
     public Equipo buscarEquipo(String codigo) {
-        throw new UnsupportedOperationException();
+        for (Equipo equipo : equipos) {
+            if (equipo.getCodigo().equals(codigo)) {
+                return equipo;
+            }
+        }
+        return null;
     }
 
     public boolean eliminarEquipo(String codigo) {
-        throw new UnsupportedOperationException();
+        Equipo equipo = buscarEquipo(codigo);
+        if (equipo == null) {
+            return false;
+        }
+        return equipos.remove(equipo);
     }
 
 }

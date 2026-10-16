@@ -34,6 +34,10 @@ public class KitIluminacion extends Equipo {
     // Metodos
     @Override
     public double calcularCosto(int horas) {
-        throw new UnsupportedOperationException();
+        double costo = TARIFA_HORA * horas;
+        if (controlInalambrico) {
+            costo += RECARGO_CONTROL;
+        }
+        return costo;
     }
 }

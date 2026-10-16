@@ -34,11 +34,15 @@ public class Dron extends Equipo {
     // Metodos
     @Override
     public double calcularCosto(int horas) {
-        throw new UnsupportedOperationException();
+        double costo = TARIFA_HORA * horas;
+        if (bateriaAdicional) {
+            costo += RECARGO_BATERIA;
+        }
+        return costo;
     }
 
     @Override
     public boolean requiereOperador() {
-        throw new UnsupportedOperationException();
+        return true;
     }
 }

@@ -45,34 +45,78 @@ public class Reserva {
         return estado;
     }
 
+    public Operador getOperador() {
+        return operador;
+    }
+
+    public ArrayList<DetalleReserva> getDetalles() {
+        return detalles;
+    }
+
     // Metodos
     public boolean agregarEquipo(Equipo equipo, int horas) {
-        throw new UnsupportedOperationException();
+        if (equipo == null || horas <= 0 || estado != EstadoReserva.SOLICITADA || contieneEquipo(equipo.getCodigo())) {
+            return false;
+        }
+        return detalles.add(new DetalleReserva(equipo, horas));
     }
 
     public boolean contieneEquipo(String codigo) {
-        throw new UnsupportedOperationException();
+        for (DetalleReserva detalle : detalles) {
+            if (detalle.getEquipo().getCodigo().equals(codigo)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean contieneDron() {
-        throw new UnsupportedOperationException();
+        for (DetalleReserva detalle : detalles) {
+            if (detalle.getEquipo() instanceof Dron) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean asignarOperador(Operador operador) {
-        throw new UnsupportedOperationException();
+        if (operador == null || estado != EstadoReserva.SOLICITADA) {
+            return false;
+        }
+        this.operador = operador;
+        return true;
     }
 
     public boolean puedeConfirmarse() {
-        throw new UnsupportedOperationException();
+        if (detalles.isEmpty()) {
+            return false;
+        }
+        if (contieneDron() && operador == null) {
+            return false;
+        }
+        return true;
     }
 
     public boolean cambiarEstado(EstadoReserva nuevo) {
-        throw new UnsupportedOperationException();
+        if (nuevo == null) {
+            return false;
+        }
+        if (estado == EstadoReserva.CANCELADA || estado == EstadoReserva.FINALIZADA) {
+            return false;
+        }
+        if (nuevo == EstadoReserva.CONFIRMADA && !puedeConfirmarse()) {
+            return false;
+        }
+        this.estado = nuevo;
+        return true;
     }
 
     public double calcularValorTotal() {
-        throw new UnsupportedOperationException();
+        double total = 0;
+        for (DetalleReserva detalle : detalles) {
+            total += detalle.calcularSubtotal();
+        }
+        return total;
     }
-
 
 }

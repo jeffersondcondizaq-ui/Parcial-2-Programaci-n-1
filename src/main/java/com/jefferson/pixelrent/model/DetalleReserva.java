@@ -29,6 +29,6 @@ public class DetalleReserva {
 
     // Metodos
     public double calcularSubtotal() {
-        throw new UnsupportedOperationException();
+        return equipo.calcularCosto(horas);
     }
 }
