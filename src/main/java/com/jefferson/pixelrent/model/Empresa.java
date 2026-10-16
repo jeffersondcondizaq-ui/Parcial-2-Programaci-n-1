@@ -116,7 +116,7 @@ public class Empresa {
 
     public boolean registrarEquipo(String codigoSede, Equipo equipo) {
         Sede sede = buscarSede(codigoSede);
-        if (sede == null) {
+        if (sede == null || equipo == null || buscarEquipo(equipo.getCodigo()) != null) {
             return false;
         }
         return sede.agregarEquipo(equipo);
@@ -270,7 +270,7 @@ public class Empresa {
 
     public boolean equipoOcupado(Equipo equipo, LocalDate fecha, Turno turno) {
         for (Reserva reserva : reservas) {
-            if (reserva.getEstado() == EstadoReserva.CANCELADA) {
+            if (reserva.getEstado() != EstadoReserva.CONFIRMADA) {
                 continue;
             }
             if (reserva.getFecha().equals(fecha) && reserva.getTurno() == turno
@@ -283,7 +283,7 @@ public class Empresa {
 
     private boolean equipoOcupadoPorOtraReserva(Equipo equipo, Reserva actual) {
         for (Reserva reserva : reservas) {
-            if (reserva == actual || reserva.getEstado() == EstadoReserva.CANCELADA) {
+            if (reserva == actual || reserva.getEstado() != EstadoReserva.CONFIRMADA) {
                 continue;
             }
             if (reserva.getFecha().equals(actual.getFecha()) && reserva.getTurno() == actual.getTurno()

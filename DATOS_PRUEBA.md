@@ -1,109 +1,99 @@
-# Datos de Prueba — PixelRent
+# Datos de Prueba — PixelRent (video de 8 minutos)
 
-Datos listos para cargar manualmente en la aplicación (vía los menús de `Main.java`) y verificar
-cada CRUD y cada validación de reservas.
+Datos mínimos organizados en cuadros. Sigue el orden de las tablas — la de Reservas es
+cronológica y cada fila depende de la anterior.
 
-> La empresa ya se crea automáticamente al iniciar el programa:
-> `Empresa("900123456-7", "PixelRent", "Calle 10 # 20-30")`
+> La empresa se crea automáticamente al iniciar: `Empresa("900123456-7", "PixelRent", "Calle 10 # 20-30")`
 
 ---
 
 ## 1. Sedes
 
-| Código | Nombre              | Dirección                  |
-|--------|---------------------|-----------------------------|
-| SED01  | Sede Norte          | Cra 15 # 100-20             |
-| SED02  | Sede Centro         | Calle 45 # 10-30            |
-| SED03  | Sede Sur            | Av. Boyacá # 5-60           |
-
-**Pruebas sugeridas:** registrar las 3, mostrar listado, buscar `SED02`, actualizar `SED03`
-(nombre/dirección), eliminar `SED03` y confirmar que ya no aparece en el listado.
+| Código | Nombre | Dirección | Acción |
+|---|---|---|---|
+| SED01 | Sede Norte | Cra 15 # 100-20 | Registrar → Actualizar (dejar o variar datos) |
+| SED02 | Sede Centro | Calle 45 # 10-30 | Registrar → **Eliminar** (demo de borrado) |
 
 ---
 
-## 2. Equipos
+## 2. Equipos (registrar los 3 en `SED01`)
 
-### Cámaras (registrar en `SED01`)
+| Código | Tipo | Marca | Modelo | Campo especial 1 | Campo especial 2 | Tarifa / hora | Recargo |
+|---|---|---|---|---|---|---|---|
+| CAM01 | Cámara | Sony | A7III | Resolución: 4K | Estabilizador: Sí | $12.000 | +$15.000 |
+| DRO01 | Dron | DJI | Mavic 3 | Autonomía: 45 min | Batería adicional: Sí | $18.000 | +$20.000 |
+| KIT01 | Kit Iluminación | Godox | SL60 | Luces: 4 | Control inalámbrico: Sí | $10.000 | +$12.000 |
 
-| Código | Marca   | Modelo    | Resolución máxima | ¿Estabilizador? |
-|--------|---------|-----------|--------------------|------------------|
-| CAM01  | Sony    | A7III     | 4K                 | Sí               |
-| CAM02  | Canon   | R6        | 4K                 | No               |
-
-### Drones (registrar en `SED01`)
-
-| Código | Marca | Modelo   | Autonomía (min) | ¿Batería adicional? |
-|--------|-------|----------|-------------------|-----------------------|
-| DRO01  | DJI   | Mavic 3  | 45                | Sí                    |
-| DRO02  | DJI   | Mini 4   | 30                | No                    |
-
-### Kits de iluminación (registrar en `SED02`)
-
-| Código | Marca    | Modelo | Cantidad de luces | ¿Control inalámbrico? |
-|--------|----------|--------|---------------------|--------------------------|
-| KIT01  | Godox    | SL60   | 4                   | Sí                       |
-| KIT02  | Aputure  | 300d   | 2                   | No                       |
-
-**Costos esperados (según tarifas fijas del modelo):**
-- Cámara: `12000 × horas` (+15000 si tiene estabilizador)
-- Dron: `18000 × horas` (+20000 si tiene batería adicional)
-- Kit iluminación: `10000 × horas` (+12000 si tiene control inalámbrico)
-
-**Pruebas sugeridas:** registrar cada equipo en la sede indicada, listar por tipo, buscar por
-código, actualizar `CAM02` (marca/modelo/resolución/estabilizador), eliminar `KIT02`.
+**Después de registrar:** Mostrar Cámaras / Drones / Kits · Actualizar `CAM01` (cambiar marca) ·
+Consultar Equipos Disponibles por Fecha/Turno `F1` → deben salir los 3.
 
 ---
 
 ## 3. Clientes
 
-| Identificación | Nombre completo     | Teléfono    | Correo                     |
-|-----------------|----------------------|-------------|------------------------------|
-| C001            | Laura Gómez          | 3001112233  | laura.gomez@mail.com        |
-| C002            | Andrés Pérez         | 3012223344  | andres.perez@mail.com       |
-| C003            | María Torres         | 3023334455  | maria.torres@mail.com       |
+| Identificación | Nombre | Teléfono | Correo |
+|---|---|---|---|
+| C001 | Laura Gómez | 3001112233 | laura@mail.com |
+| C002 | Andrés Pérez | 3012223344 | andres@mail.com |
 
-**Pruebas sugeridas:** registrar los 3, mostrar listado, buscar `C002` por ID, eliminar `C003`.
-Confirmar que **no existe** opción de actualizar datos de un cliente (requisito: inmutable tras
-el registro).
+Registrar ambos → Mostrar Clientes (**no hay opción "Actualizar" — es el requisito de inmutabilidad**) → Buscar `C001`.
 
 ---
 
 ## 4. Operadores
 
-| Identificación | Nombre completo | Certificación      | Años de experiencia |
-|-----------------|-------------------|---------------------|------------------------|
-| OP001           | Carlos Ruiz       | Piloto Dron Avanzado| 5                      |
-| OP002           | Sofía Herrera     | Piloto Dron Básico  | 2                      |
+| Identificación | Nombre | Certificación | Años exp. | Nota |
+|---|---|---|---|---|
+| OP001 | Carlos Ruiz | Piloto Avanzado | 5 | Se usa en las reservas |
+| OP002 | Sofía Herrera | Piloto Básico | 2 | Solo para probar "ya tiene operador" |
 
-**Pruebas sugeridas:** registrar los 2, mostrar listado, buscar `OP001`, actualizar certificación
-y años de `OP002`, eliminar `OP002` y verificar que ya no aparece.
+Registrar ambos → Actualizar `OP002` → Mostrar Operadores.
 
 ---
 
-## 5. Reservas (casos de prueba de validaciones)
+## 5. Fechas/turnos de reserva
 
-| Código | Cliente | Fecha        | Turno  | Equipos a agregar      | Operador asignado | Resultado esperado al Confirmar |
-|--------|---------|--------------|--------|--------------------------|---------------------|-----------------------------------|
-| RES01  | C001    | 2026-11-05   | MANANA | CAM01 (3 h)              | —                   | ✅ Se confirma (tiene equipo, sin dron) |
-| RES02  | C002    | 2026-11-06   | TARDE  | DRO01 (2 h)               | *(ninguno)*         | ❌ Falla: "contiene un dron sin operador asignado" |
-| RES03  | C002    | 2026-11-06   | TARDE  | DRO01 (2 h)               | OP001               | ✅ Se confirma (dron + operador asignado) |
-| RES04  | C003    | 2026-11-05   | MANANA | CAM01 (1 h)              | —                   | ❌ Falla al confirmar: `CAM01` ya está ocupada por `RES01` en esa fecha/turno |
-| RES05  | C001    | 2026-11-10   | NOCHE  | *(sin equipos)*          | —                   | ❌ Falla: "reserva sin equipos" |
-| RES06  | C003    | 2026-11-12   | TARDE  | KIT01 (4 h)              | —                   | Crear, luego **Cancelar**. Verificar que ya no se puede volver a Confirmar |
+| Código | Fecha | Turno |
+|---|---|---|
+| F1 | 2026-11-05 | MAÑANA |
+| F2 | 2026-11-06 | TARDE |
 
-### Secuencia de prueba recomendada
+---
 
-1. Crear `RES01` → agregar `CAM01` → **Confirmar** → debe quedar `CONFIRMADA`.
-2. Crear `RES02` → agregar `DRO01` → **Confirmar** (sin operador) → debe **rechazar**.
-3. Sobre `RES02`, asignar operador `OP001` → **Confirmar** de nuevo → ahora debe aceptar
-   (equivale al caso `RES03`).
-4. Crear `RES04` con el mismo equipo/fecha/turno que `RES01` ya confirmada → **Confirmar** →
-   debe **rechazar** por choque de disponibilidad.
-5. Crear `RES05` sin agregar equipos → **Confirmar** → debe **rechazar** por falta de equipos.
-6. Crear `RES06` → **Cancelar** → intentar **Confirmar** → debe **rechazar** porque una reserva
-   cancelada no puede volver a `CONFIRMADA`.
+## 6. Reservas — secuencia cronológica (núcleo del video)
 
-### Costos esperados de ejemplo
+| # | Reserva | Cliente | Fecha/Turno | Acción | Resultado esperado |
+|---|---|---|---|---|---|
+| 1 | RES01 | C001 | F1 | Crear + agregar `CAM01` (2h). **No confirmar aún.** | Queda `SOLICITADA` |
+| 2 | RES03 | C002 | F1 | Crear + agregar `CAM01` (1h) | ✅ se permite (RES01 aún no confirmada) |
+| 3 | RES01 | — | — | Confirmar | ✅ `CONFIRMADA` |
+| 4 | RES03 | — | — | Confirmar | ❌ `CAM01` ya está en una reserva **confirmada** en F1 |
+| 5 | RES02 | C002 | F2 | Crear + agregar `DRO01` (2h) | — |
+| 6 | RES02 | — | — | Confirmar (sin operador) | ❌ dron sin operador asignado |
+| 7 | RES02 | — | — | Asignar Operador `OP001` → Confirmar de nuevo | ✅ `CONFIRMADA` |
+| 8 | RES02 | — | — | Asignar Operador `OP002` otra vez | ❌ la reserva ya tiene un operador |
+| 9 | RES02 | — | — | Agregar `DRO01` otra vez | ❌ equipo ya incluido en la reserva |
+| 10 | RES04 | C001 | F2 | Crear → Confirmar sin equipos | ❌ reserva sin equipos |
+| 11 | KIT01 | — | — | Cambiar Disponibilidad → `EN_MANTENIMIENTO` → agregar a RES04 | ❌ equipo no disponible |
+| 12 | KIT01 / RES04 | — | — | Volver `KIT01` a `DISPONIBLE` → agregar a RES04 | ✅ agregado |
+| 13 | RES04 | — | — | Cancelar | ✅ `CANCELADA` |
+| 14 | RES04 | — | — | Confirmar de nuevo | ❌ cancelada no vuelve a confirmada |
+| 15 | RES01 | — | — | Finalizar (ya confirmada) | ✅ `FINALIZADA` |
+| 16 | RES01 | — | — | Confirmar de nuevo | ❌ finalizada no vuelve a confirmada |
 
-- `RES01`: `CAM01` 3 h con estabilizador → `12000×3 + 15000 = 51000`
-- `RES03`: `DRO01` 2 h con batería adicional → `18000×2 + 20000 = 56000`
+---
+
+## 7. Consultas y cierre finales
+
+| Acción | Resultado esperado |
+|---|---|
+| Consultar Valor Total de `RES02` | `$56.000` (18000×2 + 20000) |
+| Consultar Reservas Confirmadas por Cliente de `C002` | Lista `RES02` |
+| Eliminar Cliente `C001` | ✅ eliminado (demo de borrado) |
+| Eliminar Operador `OP002` | ✅ eliminado (demo de borrado) |
+
+---
+
+**Regla clave a narrar en el video:** un equipo solo bloquea a otra reserva cuando la que lo
+contiene está **CONFIRMADA** (filas 1–4 de la tabla de Reservas la demuestran: dos reservas
+`SOLICITADA` pueden compartir equipo/fecha/turno, pero al confirmar la segunda, falla).

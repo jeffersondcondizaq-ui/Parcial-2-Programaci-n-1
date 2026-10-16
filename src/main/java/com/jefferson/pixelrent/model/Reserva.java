@@ -80,7 +80,7 @@ public class Reserva {
     }
 
     public boolean asignarOperador(Operador operador) {
-        if (operador == null || estado != EstadoReserva.SOLICITADA) {
+        if (operador == null || estado != EstadoReserva.SOLICITADA || this.operador != null) {
             return false;
         }
         this.operador = operador;
@@ -105,6 +105,9 @@ public class Reserva {
             return false;
         }
         if (nuevo == EstadoReserva.CONFIRMADA && !puedeConfirmarse()) {
+            return false;
+        }
+        if (nuevo == EstadoReserva.FINALIZADA && estado != EstadoReserva.CONFIRMADA) {
             return false;
         }
         this.estado = nuevo;

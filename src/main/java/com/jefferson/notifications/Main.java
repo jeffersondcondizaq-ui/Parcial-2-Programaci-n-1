@@ -8,6 +8,7 @@ import com.jefferson.pixelrent.model.*;
 import javax.swing.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 
 public class Main {
     static void main() {
@@ -250,6 +251,7 @@ public class Main {
                     "\n 2. Gestionar Drones" +
                     "\n 3. Gestionar Kits Iluminacion" +
                     "\n 4. Cambiar Disponibilidad de Equipo" +
+                    "\n 5. Consultar Equipos Disponibles por Fecha y Turno" +
                     "\n 0. Regresar");
             switch (equOption) {
                 case 1:
@@ -264,12 +266,37 @@ public class Main {
                 case 4:
                     cambiarDisponibilidadEquipo(empresa);
                     break;
+                case 5:
+                    consultarEquiposDisponibles(empresa);
+                    break;
                 case 0:
                     break;
                 default:
                     info("Opción no válida.");
             }
         } while (equOption != 0);
+    }
+
+    private static void consultarEquiposDisponibles(Empresa empresa) {
+        LocalDate fecha = pedirFecha("Fecha a consultar");
+        if (fecha == null) {
+            return;
+        }
+        Turno turno = pedirTurno();
+        if (turno == null) {
+            return;
+        }
+        ArrayList<Equipo> disponibles = empresa.consultarEquiposDisponibles(fecha, turno);
+        if (disponibles.isEmpty()) {
+            info("No hay equipos disponibles para esa fecha y turno.");
+            return;
+        }
+        StringBuilder sb = new StringBuilder();
+        for (Equipo equipo : disponibles) {
+            sb.append(equipo.getCodigo()).append(" - ").append(equipo.getMarca()).append(" ")
+                    .append(equipo.getModelo()).append(" [").append(equipo.getClass().getSimpleName()).append("]\n");
+        }
+        info(sb.toString());
     }
 
     private static void cambiarDisponibilidadEquipo(Empresa empresa) {
@@ -839,8 +866,10 @@ public class Main {
                     "\n 4. Mostrar Reservas" +
                     "\n 5. Mostrar Reserva por Codigo" +
                     "\n 6. Consultar Valor Total de Reserva" +
-                    "\n 7. Confirmar Reserva" +
-                    "\n 8. Cancelar Reserva" +
+                    "\n 7. Consultar Reservas Confirmadas por Cliente" +
+                    "\n 8. Confirmar Reserva" +
+                    "\n 9. Finalizar Reserva" +
+                    "\n 10. Cancelar Reserva" +
                     "\n 0. Regresar");
             switch (resOption) {
                 case 1:
@@ -862,9 +891,15 @@ public class Main {
                     consultarValorTotalReserva(empresa);
                     break;
                 case 7:
-                    confirmarReserva(empresa);
+                    consultarReservasConfirmadasPorCliente(empresa);
                     break;
                 case 8:
+                    confirmarReserva(empresa);
+                    break;
+                case 9:
+                    finalizarReserva(empresa);
+                    break;
+                case 10:
                     cancelarReserva(empresa);
                     break;
                 case 0:
@@ -1060,5 +1095,36 @@ public class Main {
         }
         boolean ok = empresa.cambiarEstadoReserva(codigo.trim(), EstadoReserva.CANCELADA);
         info(ok ? "Reserva cancelada con éxito." : "No se pudo cancelar la reserva.");
+    }
+
+    private static void finalizarReserva(Empresa empresa) {
+        String codigo = pedirTexto("Código de la reserva a finalizar:");
+        if (codigo == null) {
+            return;
+        }
+        boolean ok = empresa.cambiarEstadoReserva(codigo.trim(), EstadoReserva.FINALIZADA);
+        info(ok ? "Reserva finalizada con éxito." : "No se pudo finalizar la reserva (solo se puede finalizar una reserva CONFIRMADA).");
+    }
+
+    private static void consultarReservasConfirmadasPorCliente(Empresa empresa) {
+        String identificacion = pedirTexto("Identificación del cliente:");
+        if (identificacion == null) {
+            return;
+        }
+        if (empresa.buscarCliente(identificacion.trim()) == null) {
+            info("No se encontró el cliente.");
+            return;
+        }
+        ArrayList<Reserva> confirmadas = empresa.consultarReservasConfirmadas(identificacion.trim());
+        if (confirmadas.isEmpty()) {
+            info("El cliente no tiene reservas confirmadas.");
+            return;
+        }
+        StringBuilder sb = new StringBuilder();
+        for (Reserva reserva : confirmadas) {
+            sb.append(reserva.getCodigo()).append(" | ").append(reserva.getFecha()).append(" - ")
+                    .append(reserva.getTurno()).append(" | Total: ").append(reserva.calcularValorTotal()).append("\n");
+        }
+        info(sb.toString());
     }
 }
