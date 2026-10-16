@@ -249,7 +249,23 @@ public class Empresa {
         if (reserva == null) {
             return false;
         }
+        if (nuevo == EstadoReserva.CONFIRMADA && !puedeConfirmarseReserva(reserva)) {
+            return false;
+        }
         return reserva.cambiarEstado(nuevo);
+    }
+
+    public boolean puedeConfirmarseReserva(Reserva reserva) {
+        if (reserva == null || !reserva.puedeConfirmarse()) {
+            return false;
+        }
+        for (DetalleReserva detalle : reserva.getDetalles()) {
+            Equipo equipo = detalle.getEquipo();
+            if (!equipo.estaDisponible() || equipoOcupadoPorOtraReserva(equipo, reserva)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public boolean equipoOcupado(Equipo equipo, LocalDate fecha, Turno turno) {
@@ -258,6 +274,19 @@ public class Empresa {
                 continue;
             }
             if (reserva.getFecha().equals(fecha) && reserva.getTurno() == turno
+                    && reserva.contieneEquipo(equipo.getCodigo())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean equipoOcupadoPorOtraReserva(Equipo equipo, Reserva actual) {
+        for (Reserva reserva : reservas) {
+            if (reserva == actual || reserva.getEstado() == EstadoReserva.CANCELADA) {
+                continue;
+            }
+            if (reserva.getFecha().equals(actual.getFecha()) && reserva.getTurno() == actual.getTurno()
                     && reserva.contieneEquipo(equipo.getCodigo())) {
                 return true;
             }
